@@ -1,0 +1,203 @@
+/* Styling for user profile buttons */
+
+.user-profile-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-profile-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.user-profile-body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top Section: Profile Picture, Rate Stars, and Delete Profile Button */
+.top-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.profile-picture img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.rate-stars {
+  text-align: center;
+}
+
+.rate-stars h3 {
+  margin: 0;
+}
+
+.stars {
+  display: flex;
+}
+
+.star {
+  font-size: 1.5em;
+  color: #ccc;
+}
+
+.star.filled {
+  color: gold;
+}
+
+.delete-profile button {
+  padding: 10px 20px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.delete-profile button:hover {
+  background-color: #d32f2f;
+}
+
+/* Main Content Section: User Information (Left) and Diplomas/Experiences (Right) */
+.main-content {
+  display: flex;
+  gap: 20px;
+}
+
+.left-column {
+  flex: 1;
+}
+
+.right-column {
+  flex: 1;
+}
+
+.profile-section {
+  background-color: #fff;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.profile-section h3 {
+  margin-top: 0;
+}
+
+.profile-field {
+  margin-bottom: 15px;
+}
+
+.profile-field label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+textarea,
+input[type="date"] {
+  width: calc(100% - 10px);
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+textarea {
+  min-height: 100px;
+}
+
+.user-profile-footer {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.user-profile-footer button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button.delete-button {
+  background-color: #f44336;
+  color: white;
+}
+
+button.delete-button:hover {
+  background-color: #d32f2f;
+}
+
+button.add-button {
+  background-color: #4caf50;
+  color: white;
+}
+
+button.remove-button {
+  background-color: #f44336;
+  color: white;
+}
+
+button.update-button {
+  background-color: #2196f3;
+  color: white;
+}
+
+.star {
+  font-size: 1.5em;
+  color: #ccc;
+}
+
+.star.filled {
+  color: gold;
+}
+
+button.add-button,
+button.remove-button,
+button.update-button {
+  padding: 10px 20px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button.add-button:hover,
+button.remove-button:hover,
+button.update-button:hover,
+bitton.update-button:hover{
+  opacity: 0.9;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul li {
+  margin-bottom: 10px;
+}

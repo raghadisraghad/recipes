@@ -1,0 +1,24 @@
+<div class="content-wrapper">
+  <nav>
+    <ul>
+      <li *ngIf="!authService.loggedIn"><a routerLink="/login" routerLinkActive="active">Login</a></li>
+      <li *ngIf="!authService.loggedIn"><a routerLink="/registerUser" routerLinkActive="active">Register User</a></li>
+      <li *ngIf="!authService.loggedIn"><a routerLink="/registerRestaurant" routerLinkActive="active">Register Restaurant</a></li>
+      <li *ngIf="authService.loggedIn"><a routerLink="/recipe" routerLinkActive="active">Recipes</a></li>
+      <li *ngIf="authService.loggedIn"><a routerLink="/restaurant" routerLinkActive="active">Restaurants</a></li>
+      <li *ngIf="authService.loggedIn"><a routerLink="/requests" routerLinkActive="active">Requests</a></li>
+      <li *ngIf="authService.loggedIn"><a routerLink="/favorites" routerLinkActive="active">Favorites</a></li>
+      <li *ngIf="authService.loggedIn"><a (click)=getProfileRoute()>Profile</a></li>
+      <li *ngIf="authService.loggedIn"><a (click)="onLogoutConfirmed()">Logout</a></li>
+    </ul>
+  </nav>
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <span class="text-muted">&copy; 2024 Recipes. All rights reserved.</span>
+  </div>
+</footer>

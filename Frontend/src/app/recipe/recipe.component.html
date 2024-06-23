@@ -1,0 +1,144 @@
+<div class="container1" *ngIf="userId">
+
+  <!-- Add Recipe Section -->
+  <section class="add-recipe-section">
+    <div class="add-recipe-form" *ngIf="userId">
+      <h2 class="toggle-button" (click)="toggleAddForm()">Add Recipe</h2>
+      <div *ngIf="showAddForm" class="form-wrapper">
+        <form (ngSubmit)="onSubmit()" enctype="multipart/form-data" class="recipe-form">
+          <label for="recipeName">Recipe Name:</label><br>
+          <input type="text" id="recipeName" name="recipeName" [(ngModel)]="newRecipe.name" required><br>
+
+          <label for="picture">Recipe Image:</label><br>
+          <input type="file" id="picture" name="picture" (change)="onFileSelected($event)" accept="image/*"><br>
+
+          <label for="recipeDescription">Description:</label><br>
+          <textarea id="recipeDescription" name="recipeDescription" [(ngModel)]="newRecipe.description" required></textarea><br>
+
+          <label for="ingredientName">Ingredient Name:</label><br>
+          <input type="text" id="ingredientName" name="ingredientName" [(ngModel)]="ingredientName" required><br>
+
+          <label for="ingredientGram">Ingredient (Gram):</label><br>
+          <input type="number" id="ingredientGram" name="ingredientGram" [(ngModel)]="ingredientGram" required><br>
+
+          <button type="button" class="add-ingredient-button" (click)="addIngredient()"><i class="fas fa-plus-circle"></i> Add Ingredient</button><br>
+
+          <div class="ingredient-list">
+            <table>
+              <tr>
+                <th>Name</th>
+                <th>Gram</th>
+                <th>Action</th>
+              </tr>
+              <tr *ngFor="let ingredient of newRecipe.ingredients; let i = index">
+                <td>{{ ingredient.name }}</td>
+                <td>{{ ingredient.gram }} g</td>
+                <td><button type="button" class="remove-ingredient-button" (click)="removeIngredient(i)">remove<i class="fas fa-trash-alt"></i></button></td>
+              </tr>
+            </table>
+          </div>
+
+          <button type="submit" class="submit-button">Add Recipe</button>
+          <button type="button" class="cancel-button" (click)="toggleAddForm()">Cancel</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="container" *ngIf="userId">
+  <!-- My Recipes Section -->
+  <section class="recipe-section" *ngIf="userId">
+    <h2>My Recipes</h2>
+    <div class="recipe-box" >
+      <ng-container *ngFor="let recipe of recipes">
+        <div class="recipe-card" *ngIf="recipe.userId.id === userId">
+          <img [src]="recipe.picture" alt="Recipe Image" class="recipe-image">
+          <div class="recipe-details">
+            <h3><input type="text" [(ngModel)]="recipe.name">by {{ recipe.userId.name }} </h3>
+            <div class="stars">
+              <span class="star" [ngClass]="{'filled': i < recipe.rate / 20}" *ngFor="let i of [0,1,2,3,4]">&#9734;</span>
+            </div>
+            <p>Created At {{ recipe.created_at | date:'medium' }}</p>
+            <div class="ingredient-list">
+              <table>
+                <tr>
+                  <th>Name</th>
+                  <th>Gram</th>
+                  <th>Action</th>
+                </tr>
+                <tr *ngFor="let ingredient of recipe.ingredients; let i = index">
+                  <td><input type="text" [(ngModel)]="ingredient.name" required></td>
+                  <td><input type="text" [(ngModel)]="ingredient.gram" required></td>
+                  <td>
+                    <button type="button" (click)="removeExistingIngredient(recipe, i)">
+                      <img [src]="'../../assets/remove.png'" alt="Remove Icon" class="remove-icon">
+                    </button>
+                  </td>
+                </tr>
+              </table>
+              <div>
+                <input type="text" [(ngModel)]="newIngredient.name" placeholder="New Ingredient Name">
+                <input type="number" [(ngModel)]="newIngredient.gram" placeholder="Gram">
+                <button type="button" (click)="addNewIngredient(recipe)"><i class="fas fa-plus-circle"></i> Add Ingredient</button>
+              </div>
+            </div>
+            <h1>Description</h1>
+            <textarea [(ngModel)]="recipe.description"></textarea>
+            <div class="action-buttons">
+              <button type="button" class="action-button update-button" (click)="update(recipe)"><i class="fas fa-edit"></i> Update</button>
+              <button type="button" class="action-button delete-button" (click)="deleteRecipe(recipe._id)"><i class="fas fa-trash-alt"></i> Delete</button>
+              <button type="button" class="action-button like-button" (click)="isFavorite(recipe._id) ? removeFavorite(recipe._id) : addFavorite(recipe._id)">
+                <i class="fas fa-heart"></i> {{ isFavorite(recipe._id) ? 'Unlike' : 'Like' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </section>
+
+  <!-- Other Recipes Section -->
+  <section class="recipe-section">
+    <h2>Other Recipes</h2>
+    <div class="recipe-box">
+      <ng-container *ngFor="let recipe of recipes">
+        <div class="recipe-card" *ngIf="recipe.userId.id !== userId">
+          <img [src]="recipe.picture" alt="Recipe Image" class="recipe-image">
+          <div class="recipe-details">
+            <h3>{{ recipe.name }} </h3>
+            <h3>by {{ recipe.userId.name }}</h3>
+            <div class="stars">
+              <span class="star" [ngClass]="{'filled': i < recipe.rate / 20}" *ngFor="let i of [0,1,2,3,4]">&#9733;</span>
+            </div>
+            <p>Created At {{ recipe.created_at | date:'medium' }}</p>
+            <div class="ingredient-list">
+              <table>
+                <tr>
+                  <th>Name</th>
+                  <th>Gram</th>
+                </tr>
+                <tr *ngFor="let ingredient of recipe.ingredients">
+                  <td>{{ ingredient.name }}</td>
+                  <td>{{ ingredient.gram }}</td>
+                </tr>
+              </table>
+            </div>
+            <h1>Description</h1>
+            <p>{{ recipe.description }}</p>
+            <button type="button" *ngIf="userId" class="action-button like-button" (click)="isFavorite(recipe._id) ? removeFavorite(recipe._id) : addFavorite(recipe._id)">
+              <i class="fas fa-heart"></i> {{ isFavorite(recipe._id) ? 'Unlike' : 'Like' }}
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </section>
+
+</div>
+
+
+<div *ngIf="!userId">
+  <p>Please login to view your profile.</p>
+</div>

@@ -1,0 +1,39 @@
+<div class="user-profile-container" *ngIf="userId">
+  <div class="user-profile-header">
+    <h2>Welcome, {{ selectedUser.name }}</h2>
+  </div>
+  <div class="user-profile-body">
+    <div class="profile-details">
+      <img [src]="selectedUser.picture || '/assets/defaultUser.png'" alt="Profile Picture">
+      <div class="profile-field">
+        <div class="stars">
+          <span class="star" [ngClass]="{'filled': i < selectedUser.rate / 20}" *ngFor="let i of [0,1,2,3,4]">&#9734;</span>
+        </div>
+        <strong>Name:</strong>
+        <input type="text" [(ngModel)]="selectedUser.name" name="name">
+      </div>
+      <div class="profile-field">
+        <strong>Email:</strong>
+        <input type="email" [(ngModel)]="selectedUser.email" name="email">
+      </div>
+      <div class="profile-field">
+        <strong>Phone:</strong>
+        <input type="tel" [(ngModel)]="selectedUser.phone" name="phone">
+      </div>
+      <div class="profile-field">
+        <strong>Description:</strong>
+        <textarea [(ngModel)]="selectedUser.description" name="description"></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="user-profile-footer">
+    <button (click)="update()" class="update">Update Profile</button>
+    <button (click)="delete()" class="delete">Delete Profile</button>
+    <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+  </div>
+</div>
+
+<div *ngIf="!userId">
+  <p>Please login to view your profile.</p>
+</div>
+

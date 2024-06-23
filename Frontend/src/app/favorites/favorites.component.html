@@ -1,0 +1,40 @@
+<section class="recipe-section" *ngIf="userId">
+  <h2>Favorite Recipes</h2>
+  <div class="recipe-box">
+    <ng-container *ngFor="let recipe of favoriteRecipes">
+      <div class="recipe-card" >
+        <img [src]="recipe.picture" alt="Recipe Image" class="recipe-image">
+        <div class="recipe-details">
+          <h3>{{ recipe.name }}</h3>
+          <h3>by {{ recipe.userId.name }}</h3>
+          <div class="stars">
+            <span class="star" [ngClass]="{'filled': i < recipe.rate / 20}" *ngFor="let i of [0,1,2,3,4]">&#9733;</span>
+          </div>
+          <p>Created At {{ recipe.created_at | date:'medium' }}</p>
+          <div class="ingredient-list">
+            <table>
+              <tr>
+                <th>Name</th>
+                <th>Gram</th>
+              </tr>
+              <tr *ngFor="let ingredient of recipe.ingredients">
+                <td>{{ ingredient.name }}</td>
+                <td>{{ ingredient.gram }}</td>
+              </tr>
+            </table>
+          </div>
+          <h1>Description</h1>
+          <p>{{ recipe.description }}</p>
+          <button type="button" class="action-button unlike-button" (click)="removeFromFavorites(recipe._id)">
+            <i class="fas fa-heart"></i> Unlike
+          </button>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</section>
+
+
+<div *ngIf="!userId">
+  <p>Please login to view your profile.</p>
+</div>

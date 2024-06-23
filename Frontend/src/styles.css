@@ -1,0 +1,33 @@
+/* Resetting default margin and padding for all elements */
+
+body, h1, p {
+  margin: 0;
+  padding: 0;
+}
+
+/* Setting a background color and text color for the body */
+body {
+  background-color: #f0f0f0;
+  color: #333;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* Styling the app-root component */
+app-root {
+  display: block;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Styling the header/title */
+h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+/* Styling the paragraph text */
+p {
+  font-size: 16px;
+  line-height: 1.5;
+}

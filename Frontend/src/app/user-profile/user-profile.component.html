@@ -1,0 +1,112 @@
+<div class="user-profile-container" *ngIf="userId">
+  <div class="user-profile-header">
+    <h2>Welcome, {{ selectedUser.firstName }}</h2>
+  </div>
+
+  <div class="user-profile-body">
+    <!-- Top Section: Profile Picture, Rate Stars, and Delete Profile Button -->
+    <div class="top-section">
+      <div class="profile-picture">
+        <img [src]="selectedUser.picture || '/assets/defaultUser.png'" alt="Profile Picture">
+      </div>
+      <div class="rate-stars">
+        <div class="stars">
+          <span class="star" [ngClass]="{'filled': i < selectedUser.rate / 20}" *ngFor="let i of [0,1,2,3,4]">&#9734;</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Section: User Information (Left) and Diplomas/Experiences (Right) -->
+    <div class="main-content">
+      <!-- Left Column: User Information -->
+      <div class="left-column">
+        <div class="profile-section">
+          <h3>User Information</h3>
+          <div class="profile-field">
+            <label>First Name:</label>
+            <input type="text" [(ngModel)]="selectedUser.firstName" name="firstName">
+          </div>
+          <div class="profile-field">
+            <label>Last Name:</label>
+            <input type="text" [(ngModel)]="selectedUser.lastName" name="lastName">
+          </div>
+          <div class="profile-field">
+            <label>Username:</label>
+            <input type="text" [(ngModel)]="selectedUser.username" name="username">
+          </div>
+          <div class="profile-field">
+            <label>Email:</label>
+            <input type="email" [(ngModel)]="selectedUser.email" name="email">
+          </div>
+          <div class="profile-field">
+            <label>Phone:</label>
+            <input type="tel" [(ngModel)]="selectedUser.phone" name="phone">
+          </div>
+          <div class="profile-field">
+            <label>Description:</label>
+            <textarea [(ngModel)]="selectedUser.description" name="description"></textarea>
+          </div>
+          <div class="user-profile-footer">
+            <button (click)="update()" class="update-button">Update Profile</button>
+          </div>
+          <div class="delete-profile">
+            <button (click)="delete()" class="delete-button">Delete Profile</button>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Diplomas and Experiences -->
+      <div class="right-column">
+        <div class="profile-section">
+          <h3>Experiences</h3>
+          <div class="profile-field">
+            <label>Name:</label>
+            <input type="text" [(ngModel)]="newExperience.name" name="newExperience.name">
+            <label>Content:</label>
+            <input type="text" [(ngModel)]="newExperience.content" name="newExperience.content">
+            <label>Date Obtained:</label>
+            <input type="date" [(ngModel)]="newExperience.date" name="newExperience.date">
+            <button type="button" class="add-button" (click)="addExperience()">Add Experience</button>
+          </div>
+          <ul *ngIf="selectedUser.experiences && selectedUser.experiences.length">
+            <li *ngFor="let experience of selectedUser.experiences">
+              {{ experience.content }} - Obtained on: {{ experience.date | date }}
+              <button type="button" class="remove-button" (click)="removeExperience(experience)">Remove</button>
+            </li>
+          </ul>
+          <div class="user-profile-footer">
+            <button (click)="update()" class="update-button">Update Experiences</button>
+          </div>
+          <p *ngIf="!selectedUser.experiences || !selectedUser.experiences.length">No experiences added.</p>
+        </div>
+
+        <div class="profile-section">
+          <h3>Diplomas</h3>
+          <div class="profile-field">
+            <label>Name:</label>
+            <input type="text" [(ngModel)]="newDiploma.name" name="newDiploma.name">
+            <label>Content:</label>
+            <input type="text" [(ngModel)]="newDiploma.content" name="newDiploma.content">
+            <label>Date Obtained:</label>
+            <input type="date" [(ngModel)]="newDiploma.date" name="newDiploma.date">
+            <button type="button" class="add-button" (click)="addDiploma()">Add Diploma</button>
+          </div>
+          <ul *ngIf="selectedUser.diplomas && selectedUser.diplomas.length">
+            <li *ngFor="let diploma of selectedUser.diplomas">
+              {{ diploma.content }} - Obtained on: {{ diploma.date | date }}
+              <button type="button" class="remove-button" (click)="removeDiploma(diploma)">Remove</button>
+            </li>
+          </ul>
+          <div class="user-profile-footer">
+            <button (click)="update()" class="update-button">Update Diplomas</button>
+          </div>
+          <p *ngIf="!selectedUser.diplomas || !selectedUser.diplomas.length">No diplomas added.</p>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div *ngIf="!userId" class="user-profile-container">
+  <p>Please login to view your profile.</p>
+</div>

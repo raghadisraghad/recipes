@@ -1,0 +1,16 @@
+<div class="container">
+  <h1>Login Form</h1>
+  <form class="login-form" (ngSubmit)="login()">
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" [(ngModel)]="email" name="email" required>
+    </div>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" [(ngModel)]="password" name="password" required>
+    </div>
+    <button type="submit">Login</button>
+  </form>
+  <p *ngIf="token" class="token-info">Token: {{ token }}</p>
+  <p class="error-message">{{ errorMessage }}</p>
+</div>

@@ -1,0 +1,38 @@
+<section class="restaurant-list" *ngIf="userId">
+  <div *ngFor="let res of restaurants" class="restaurant-item"><img class="profile-picture" [src]="res?.picture || '/assets/defaultUser.png'" alt="Profile Picture">
+    <div class="rate-stars">
+      <div class="stars">
+        <span class="star" [ngClass]="{'filled': i < res.rate / 20}" *ngFor="let i of [0,1,2,3,4]">&#9734;</span>
+      </div>
+    </div>
+    <h3>{{ res.name }}</h3>
+    <p><strong>Description:</strong> {{ res.description }}</p>
+    <p><strong>Picture:</strong> <img [src]="res.picture" alt="{{ res.name }}"></p>
+    <p><strong>Rate:</strong> {{ res.rate }}</p>
+    <p><strong>Phone:</strong> {{ res.phone }}</p>
+    <p><strong>Email:</strong> {{ res.email }}</p>
+
+    <div *ngIf="authService.loggedIn && type === 'user'" class="apply-section">
+      <button *ngIf="!isAlreadyApplied(res._id)" (click)="toggleApplyForm(res)">Apply</button>
+      <span *ngIf="isAlreadyApplied(res._id)">Already Applied</span>
+    </div>
+
+    <div *ngIf="applyFormVisible && newRequest.RestaurantId === res" class="application-form">
+      <h3>Application Form</h3>
+      <form (ngSubmit)="Update()">
+        <label for="description">Description:</label>
+        <input id="description" [(ngModel)]="newRequest.description" name="description" type="text" required />
+
+        <label for="position">Position:</label>
+        <input id="position" [(ngModel)]="newRequest.position" name="position" type="text" required />
+
+        <button type="submit">Submit</button>
+        <button type="button" (click)="cancelApply()">Cancel</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<div *ngIf="!userId">
+  <p>Please login to view your profile.</p>
+</div>

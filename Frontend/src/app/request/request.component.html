@@ -1,0 +1,264 @@
+<div *ngIf="type === 'restaurant'">
+  <h2 class="section-title">Requests for Your Restaurant</h2>
+
+  <div class="requests-wrapper" *ngIf="userId">
+    <div class="requests-column">
+      <div class="approved-requests">
+        <h3>Approved Requests</h3>
+        <ng-container *ngFor="let result of restaurantRequests">
+          <div *ngIf="result.request.status === true" class="request-item">
+            <div class="request-details">
+              <div class="rate-stars">
+                <div class="stars">
+                  <span class="star" [ngClass]="{'filled': i < result.user.rate / 20}" *ngFor="let i of [0,1,2,3,4]">&#9734;</span>
+                </div>
+              </div>
+              <h4>Description: {{ result.request.description }}</h4>
+              <h4>Position: {{ result.request.position }}</h4>
+              <h4>Status: Approved</h4>
+              <h4>Restaurant's Comment: {{ result.request.interview.content }}</h4>
+              <h4>Interview's Details:</h4>
+              <h4>Location: {{ result.request.interview.Location }} - {{ result.request.interview.date | date:'fullDate' }} at {{ result.request.interview.date | date:'shortTime' }}</h4>
+              <h4>Applicant's Details:</h4>
+              <div class="user-details">
+                <img class="profile-picture" [src]="result.user?.picture || '/assets/defaultUser.png'" alt="Profile Picture">
+                <table class="user-info-table">
+                  <tr>
+                    <td>FullName:</td>
+                    <td>{{ result.user?.firstName }} {{ result.user?.lastName }}</td>
+                  </tr>
+                  <tr>
+                    <td>Email:</td>
+                    <td>{{ result.user?.email }}</td>
+                  </tr>
+                  <tr>
+                    <td>Phone:</td>
+                    <td>{{ result.user?.phone }}</td>
+                  </tr>
+                  <tr>
+                    <td>Description:</td>
+                    <td>{{ result.user?.description }}</td>
+                  </tr>
+                </table>
+              </div>
+              <h4>Applicant's Diplomas:</h4>
+              <table *ngIf="result.user?.diplomas && result.user?.diplomas.length > 0" class="diplomas-table">
+                <tr>
+                  <th>Name</th>
+                  <th>Content</th>
+                  <th>Date</th>
+                </tr>
+                <tr *ngFor="let diploma of result.user?.diplomas">
+                  <td>{{ diploma.name }}</td>
+                  <td>{{ diploma.content }}</td>
+                  <td>{{ diploma.date | date }}</td>
+                </tr>
+              </table>
+              <h4>Applicant's Experiences:</h4>
+              <table *ngIf="result.user?.experiences && result.user?.experiences.length > 0" class="experiences-table">
+                <tr>
+                  <th>Name</th>
+                  <th>Content</th>
+                  <th>Date</th>
+                </tr>
+                <tr *ngFor="let experience of result.user?.experiences">
+                  <td>{{ experience.name }}</td>
+                  <td>{{ experience.content }}</td>
+                  <td>{{ experience.date | date }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <div class="requests-column">
+      <div class="pending-requests">
+        <h3>Pending Requests</h3>
+        <ng-container *ngFor="let result of restaurantRequests">
+          <div *ngIf="result.request.status === false" class="request-item">
+            <div class="request-details">
+              <div class="rate-stars">
+                <div class="stars">
+                  <span class="star" [ngClass]="{'filled': i < result.user.rate / 20}" *ngFor="let i of [0,1,2,3,4]">&#9734;</span>
+                </div>
+              </div>
+              <h4>Description: {{ result.request.description }}</h4>
+              <h4>Position: {{ result.request.position }}</h4>
+              <h4>Pending</h4>
+              <h4>Applicant's Details:</h4>
+              <div class="user-details">
+                <img class="profile-picture" [src]="result.user?.picture || '/assets/defaultUser.png'" alt="Profile Picture">
+                <table class="user-info-table">
+                  <tr>
+                    <td>FullName:</td>
+                    <td>{{ result.user?.firstName }} {{ result.user?.lastName }}</td>
+                  </tr>
+                  <tr>
+                    <td>Email:</td>
+                    <td>{{ result.user?.email }}</td>
+                  </tr>
+                  <tr>
+                    <td>Phone:</td>
+                    <td>{{ result.user?.phone }}</td>
+                  </tr>
+                  <tr>
+                    <td>Description:</td>
+                    <td>{{ result.user?.description }}</td>
+                  </tr>
+                </table>
+              </div>
+              <h4>Applicant's Diplomas:</h4>
+              <table *ngIf="result.user?.diplomas && result.user?.diplomas.length > 0" class="diplomas-table">
+                <tr>
+                  <th>Name</th>
+                  <th>Content</th>
+                  <th>Date</th>
+                </tr>
+                <tr *ngFor="let diploma of result.user?.diplomas">
+                  <td>{{ diploma.name }}</td>
+                  <td>{{ diploma.content }}</td>
+                  <td>{{ diploma.date | date }}</td>
+                </tr>
+              </table>
+              <h4>Applicant's Experiences:</h4>
+              <table *ngIf="result.user?.experiences && result.user?.experiences.length > 0" class="experiences-table">
+                <tr>
+                  <th>Name</th>
+                  <th>Content</th>
+                  <th>Date</th>
+                </tr>
+                <tr *ngFor="let experience of result.user?.experiences">
+                  <td>{{ experience.name }}</td>
+                  <td>{{ experience.content }}</td>
+                  <td>{{ experience.date | date }}</td>
+                </tr>
+              </table>
+
+              <!-- Approve Button and Form -->
+              <button class="approve-button" (click)="toggleApprovalForm()">Approve</button>
+
+              <div *ngIf="showApprovalForm" class="approval-form">
+                <h4>Add Interview Information</h4>
+                <form (ngSubmit)="approveRequest(result.request._id)">
+                  <label for="approvalForm.content">Content:</label>
+                  <input type="text" id="approvalForm.content" [(ngModel)]="approvalForm.content" name="content" required>
+
+                  <label for="approvalForm.Location">Location:</label>
+                  <input type="text" id="approvalForm.Location" [(ngModel)]="approvalForm.Location" name="location" required>
+
+                  <label for="approvalForm.date">Date:</label>
+                  <input type="datetime-local" id="approvalForm.date" [(ngModel)]="approvalForm.date" name="date" required>
+
+                  <div class="form-buttons">
+                    <button type="submit">Submit</button>
+                    <button type="button" (click)="toggleApprovalForm()">Cancel</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div *ngIf="type === 'user'">
+
+  <h2 class="section-title">Your Requests</h2>
+  <div class="requests-wrapper">
+    <div class="requests-column">
+      <div class="approved-requests">
+        <h3>Approved Requests</h3>
+        <ng-container *ngFor="let result of userRequests">
+          <div *ngIf="result.request.status === true" class="request-item">
+            <div class="request-details">
+              <h4>Description: {{ result.request.description }}</h4>
+              <h4>Position: {{ result.request.position }}</h4>
+              <h4>Status: Approved</h4>
+              <h4>Restaurant's Comment: {{ result.request.interview.content }}</h4>
+              <h4>Interview's Details:</h4>
+              <h4>Location: {{ result.request.interview.Location }} - {{ result.request.interview.date | date:'fullDate' }} at {{ result.request.interview.date | date:'shortTime' }}</h4>
+              <h4>Restaurant's Details:</h4>
+              <div class="user-details">
+                <img class="profile-picture" [src]="result.restaurant?.picture || '/assets/defaultUser.png'" alt="Profile Picture">
+                <div class="rate-stars">
+                  <div class="stars">
+                    <span class="star" [ngClass]="{'filled': i < result.restaurant.rate / 20}" *ngFor="let i of [0,1,2,3,4]">&#9734;</span>
+                  </div>
+                </div>
+                <table class="user-info-table">
+                  <tr>
+                    <td>FullName:</td>
+                    <td>{{ result.restaurant?.name }} {{ result.user?.lastName }}</td>
+                  </tr>
+                  <tr>
+                    <td>Email:</td>
+                    <td>{{ result.restaurant?.email }}</td>
+                  </tr>
+                  <tr>
+                    <td>Phone:</td>
+                    <td>{{ result.restaurant?.phone }}</td>
+                  </tr>
+                  <tr>
+                    <td>Description:</td>
+                    <td>{{ result.restaurant?.description }}</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <div class="requests-column">
+      <div class="pending-requests">
+        <h3>Pending Requests</h3>
+        <ng-container *ngFor="let result of userRequests">
+          <div *ngIf="result.request.status === false" class="request-item">
+            <div class="request-details">
+              <h4>Description: {{ result.request.description }}</h4>
+              <h4>Position: {{ result.request.position }}</h4>
+              <h4>Pending</h4>
+              <h4>Restaurant's Details:</h4>
+              <div class="user-details">
+                <img class="profile-picture" [src]="result.restaurant?.picture || '/assets/defaultUser.png'" alt="Profile Picture">
+                <div class="rate-stars">
+                  <div class="stars">
+                    <span class="star" [ngClass]="{'filled': i < result.restaurant.rate / 20}" *ngFor="let i of [0,1,2,3,4]">&#9734;</span>
+                  </div>
+                </div>
+                <table class="user-info-table">
+                  <tr>
+                    <td>FullName:</td>
+                    <td>{{ result.restaurant?.name }} {{ result.user?.lastName }}</td>
+                  </tr>
+                  <tr>
+                    <td>Email:</td>
+                    <td>{{ result.restaurant?.email }}</td>
+                  </tr>
+                  <tr>
+                    <td>Phone:</td>
+                    <td>{{ result.restaurant?.phone }}</td>
+                  </tr>
+                  <tr>
+                    <td>Description:</td>
+                    <td>{{ result.restaurant?.description }}</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<div *ngIf="!userId">
+  <p>Please login to view your profile.</p>
+</div>

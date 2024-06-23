@@ -1,0 +1,33 @@
+<div class="container">
+  <h1>Register Restaurant </h1>
+  <form class="register-form" (ngSubmit)="register()">
+    <div>
+      <label for="name">Name:</label>
+      <input type="text" [(ngModel)]="name" name="name" required>
+    </div>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" [(ngModel)]="password" name="password" required>
+    </div>
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" [(ngModel)]="email" name="email" required>
+    </div>
+    <div>
+      <label for="phone">Phone:</label>
+      <input type="number" [(ngModel)]="phone" name="phone" required>
+    </div>
+    <!-- Optional: Picture upload -->
+    <!-- <div>
+      <label for="picture">Picture:</label>
+      <input type="file" (change)="onFileSelected($event)" accept="image/*">
+      <img *ngIf="imageUrl" [src]="imageUrl" alt="Uploaded Image" style="max-width: 300px; margin-top: 10px;">
+    </div> -->
+    <div>
+      <label for="description">Description:</label>
+      <textarea [(ngModel)]="description" name="description"></textarea>
+    </div>
+    <button type="submit">Register Restaurant</button>
+  </form>
+  <p class="error-message">{{ errorMessage }}</p>
+</div>

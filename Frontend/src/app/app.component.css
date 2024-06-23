@@ -1,0 +1,60 @@
+/* Styles for the navigation bar */
+nav {
+  background-color: #333;
+  color: white;
+  padding: 1rem;
+  margin: 0; /* Remove default margin */
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-around;
+}
+
+nav ul li {
+  display: inline;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s;
+}
+
+nav ul li a:hover,
+nav ul li a.active {
+  background-color: #555;
+  border-radius: 4px;
+}
+
+/* Styles for the footer */
+.footer {
+  background-color: #333;
+  height: 3rem;
+  padding: 1rem 0;
+  text-align: center;
+}
+
+.footer .text-muted {
+  color: #999;
+}
+
+.container {
+  max-width: 1200px;
+}
+
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 90vh;
+}
+
+main {
+  flex: 1;
+  padding: 2rem;
+}
+
