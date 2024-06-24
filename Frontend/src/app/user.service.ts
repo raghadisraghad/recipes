@@ -27,9 +27,9 @@ export class UserService {
     return this.http.post<any>(`${this.apiUrl}`, newRecipe, { headers: this.getHeaders() });
   }
 
-  rate(id: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/rate/${id}`, { headers: this.getHeaders() });
-  }
+  // rate(id: string): Observable<any> {
+  //   return this.http.post<any>(`${this.apiUrl}/rate/${id}`, { headers: this.getHeaders() });
+  // }
 
   update(updatedRecipe: any): Observable<any> {
     const id = updatedRecipe._id;

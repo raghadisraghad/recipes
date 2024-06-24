@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const axios = require('axios');
 const Recipe = require("../models/recipes");
 const User = require("../models/user");
 const Restaurant = require("../models/restaurant");
@@ -42,19 +43,80 @@ router.post("/recipe", async (req, res) => {
   }
 });
 
-router.post("/rate/:id", async (req, res) => {
+router.post("/rate/user", async (req, res) => {
   try {
-    const {id} = req.params
-    const recipe = await Recipe.findById(id);
-    const userFavoritesCount = await User.countDocuments({ favorites: id });
-    const restaurantFavoritesCount = await Restaurant.countDocuments({ favorites: id });
+    const users = await User.find();
+    for (let i = 0; i < users.length; i++) {
+      const userId = users[i]._id;
+      const recipes = await Recipe.find({ 'userId.id': userId });
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      if (!recipes || recipes.length === 0) {
+        return res.json({ message: 'No recipes found for the user', rate: 0 });
+      }
+      let totalRate = 0;
+      recipes.forEach(recipe => {
+        totalRate += recipe.rate;
+      });
+      const numRecipes = recipes.length;
+      const rate = totalRate / numRecipes;
+      user.rate = rate;
+      await user.save();
+    }
+    res.json(users);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+router.post("/rate/restaurant", async (req, res) => {
+  try {
+    const users = await User.find();
+    for (let i = 0; i < users.length; i++) {
+      const userId = users[i]._id;
+      const recipes = await Recipe.find({ 'userId.id': userId });
+      const user = await Restaurant.findById(userId);
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      if (!recipes || recipes.length === 0) {
+        return res.json({ message: 'No recipes found for the user', rate: 0 });
+      }
+      let totalRate = 0;
+      recipes.forEach(recipe => {
+        totalRate += recipe.rate;
+      });
+      const numRecipes = recipes.length;
+      const rate = totalRate / numRecipes;
+      user.rate = rate;
+      await user.save();
+    }
+    res.json(users);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+router.post("/rate/:idRecipe", async (req, res) => {
+  try {
+    const {idRecipe} = req.params.idRecipe
+    const recipe = await Recipe.findById(idRecipe);
+    const userFavoritesCount = await User.countDocuments({ favorites: idRecipe });
+    const restaurantFavoritesCount = await Restaurant.countDocuments({ favorites: idRecipe });
     const totalFavorites = restaurantFavoritesCount + userFavoritesCount;
     const totalUser = await User.countDocuments();
     const totalRes = await Restaurant.countDocuments();
     const total = totalUser+totalRes
     recipe.rate = parseFloat(((totalFavorites / total)*100).toFixed(2))
     await recipe.save();
-    const updatedRecipe = await Recipe.findById(id);
+    const response = '';
+    response = await axios.get('http://localhost:3000/rate/user')
+    response = await axios.get('http://localhost:3000/rate/restaurant')
+    const updatedRecipe = await Recipe.findById(idRecipe);
     res.status(200).json(updatedRecipe);
   } catch (err) {
     res.status(500).json({

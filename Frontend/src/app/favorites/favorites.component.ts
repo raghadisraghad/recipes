@@ -38,30 +38,6 @@ export class FavoritesComponent implements OnInit{
     );
   }
 
-  rateUser (){
-    // @ts-ignore
-    this.userService.rate(this.userId).subscribe(
-      (response) => {
-        console.log('Rate Updated:', response);
-      },
-      (error) => {
-        console.error('Error adding to favorites:', error);
-      }
-    );
-  }
-
-  rateRestaurant (){
-    // @ts-ignore
-    this.restaurantService.rate(this.userId).subscribe(
-      (response) => {
-        console.log('Rate Updated:', response);
-      },
-      (error) => {
-        console.error('Error adding to favorites:', error);
-      }
-    );
-  }
-
   rate (recipeId: string){
     this.recipeService.rate(recipeId).subscribe(
       (response) => {
@@ -80,8 +56,6 @@ export class FavoritesComponent implements OnInit{
         () => {
           console.log(`Recipe with ID ${recipeId} removed from favorites successfully.`);
           this.rate(recipeId);
-          this.rateUser();
-          this.rateRestaurant();
           // @ts-ignore
           this.getFavoriteRecipes(this.userId);
         },

@@ -32,8 +32,6 @@ export class RecipeComponent implements OnInit {
   ngOnInit(): void {
     this.loadRecipes();
     this.loadFavorites();
-    this.rateUser();
-    this.rateRestaurant();
   }
 
   loadRecipes() {
@@ -169,30 +167,6 @@ export class RecipeComponent implements OnInit {
     );
   }
 
-  rateUser (){
-    // @ts-ignore
-    this.userService.rate(this.userId).subscribe(
-      (response) => {
-        console.log('Rate Updated:', response);
-      },
-      (error) => {
-        console.error('Error adding to favorites:', error);
-      }
-    );
-  }
-
-  rateRestaurant (){
-    // @ts-ignore
-    this.restaurantService.rate(this.userId).subscribe(
-      (response) => {
-        console.log('Rate Updated:', response);
-      },
-      (error) => {
-        console.error('Error adding to favorites:', error);
-      }
-    );
-  }
-
   addFavorite(recipeId: string) {
     if (this.userId) {
       this.recipeService.addFavorite(this.userId, recipeId).subscribe(
@@ -200,7 +174,6 @@ export class RecipeComponent implements OnInit {
           console.log('Added to favorites:', response);
           this.loadFavorites();
           this.rate(recipeId);
-          this.ngOnInit();
           alert('Added to favorites successfully!');
         },
         (error) => {
@@ -217,7 +190,6 @@ export class RecipeComponent implements OnInit {
           console.log('Removed from favorites:', response);
           this.loadFavorites();
           this.rate(recipeId);
-          this.ngOnInit();
           alert('Removed to favorites successfully!');
         },
         (error) => {

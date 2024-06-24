@@ -78,32 +78,4 @@ router.delete("/user/:id", async (req, res) => {
   }
 });
 
-router.post("/user/rate/:id", async (req, res) => {
-  const userId = req.params.id;
-
-  try {
-    const recipes = await Recipe.find({ 'userId.id': userId });
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    if (!recipes || recipes.length === 0) {
-      return res.json({ message: 'No recipes found for the user', rate: 0 });
-    }
-    let totalRate = 0;
-    recipes.forEach(recipe => {
-      totalRate += recipe.rate;
-    });
-    const numRecipes = recipes.length;
-    const rate = totalRate / numRecipes;
-    user.rate = rate;
-    await user.save();
-    const updatedUser = await User.findById(userId);
-    res.json(updatedUser);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
 module.exports = router
