@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const axios = require('axios');
 const User = require('../models/user');
+const Recipe = require("../models/recipes");
 const Restaurant = require('../models/restaurant');
 
 router.post('/registerRestaurant', async (req, res) => {
@@ -15,6 +17,14 @@ router.post('/registerRestaurant', async (req, res) => {
     restaurant.password = await bcrypt.hash(restaurant.password, 10);
     await restaurant.save();
 
+    const recipeRate = await Recipe.find();
+    for (let i = 0; i < recipeRate.length; i++) {
+      try {
+        await axios.post(`http://localhost:3000/rate/${recipeRate[i]._id}`);
+      } catch (err) {
+        console.error(`Error updating rate for recipe ${recipeRate[i]._id}:`, err.message);
+      }
+    }
     res.status(201).json({ message: "Registered Restaurant Successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -31,6 +41,14 @@ router.post('/registerUser', async (req, res) => {
     user.password = await bcrypt.hash(user.password, 10);
     await user.save();
 
+    const recipeRate = await Recipe.find();
+    for (let i = 0; i < recipeRate.length; i++) {
+      try {
+        await axios.post(`http://localhost:3000/rate/${recipeRate[i]._id}`);
+      } catch (err) {
+        console.error(`Error updating rate for recipe ${recipeRate[i]._id}:`, err.message);
+      }
+    }
     res.status(201).json({ message: "Registered User Successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -60,6 +78,14 @@ router.post('/login', async (req, res) => {
     const isPasswordValid = await bcrypt.compare(login.password, entity.password);
     if (!isPasswordValid) {
       return res.status(400).json({ message: "Mot de passe incorrect" });
+    }
+    const recipeRate = await Recipe.find();
+    for (let i = 0; i < recipeRate.length; i++) {
+      try {
+        await axios.post(`http://localhost:3000/rate/${recipeRate[i]._id}`);
+      } catch (err) {
+        console.error(`Error updating rate for recipe ${recipeRate[i]._id}:`, err.message);
+      }
     }
     
     const lastActivity = Math.floor(Date.now() / 1000);

@@ -9,7 +9,7 @@ const restaurantSchema = new mongoose.Schema({
   phone: {type: Number,required: true},
   picture: {type: String,required: false,default: path.join(__dirname, '../media/defaultRestaurant.png')},
   description: {type: String,required: false},
-  rate: {type: Number,required: false},
+  rate: {type: Number,required: false, default: 0 },
   favorites: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Recipe' }]
 
 });

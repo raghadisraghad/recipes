@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Restaurant = require("../models/restaurant");
 const Request = require("../models/request");
+const axios = require('axios');
 const Recipe = require("../models/recipes");
 
 router.get("/restaurant", async (req, res) => {
@@ -69,6 +70,22 @@ router.delete("/restaurant/:id", async (req, res) => {
     const restaurant = await Restaurant.findByIdAndDelete(id);
     if(!restaurant){
       return res.status(404).json({message:"Restaurant Not Found !!!"})
+    }
+    const recipeRate = await Recipe.find();
+    for (let i = 0; i < recipeRate.length; i++) {
+      try {
+        await axios.post(`http://localhost:3000/rate/${recipeRate[i]._id}`);
+      } catch (err) {
+        console.error(`Error updating rate for recipe ${recipeRate[i]._id}:`, err.message);
+      }
+    }
+    const r = await Recipe.find({ 'userId.id': id });
+    for (let i = 0; i < r.length; i++) {
+      try {
+        await axios.delete(`http://localhost:3000/recipe/${r[i]._id}`);
+      } catch (err) {
+        console.error(`Error updating rate for recipe ${r[i]._id}:`, err.message);
+      }
     }
     res.status(200).json({ message: "Restaurant Deleted successfuly",restaurant });
   } catch (err) {

@@ -46,26 +46,23 @@ router.post("/recipe", async (req, res) => {
 router.post("/rate/user", async (req, res) => {
   try {
     const users = await User.find();
-    for (let i = 0; i < users.length; i++) {
-      const userId = users[i]._id;
-      const recipes = await Recipe.find({ 'userId.id': userId });
-      const user = await User.findById(userId);
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-      if (!recipes || recipes.length === 0) {
-        return res.json({ message: 'No recipes found for the user', rate: 0 });
-      }
-      let totalRate = 0;
-      recipes.forEach(recipe => {
-        totalRate += recipe.rate;
-      });
-      const numRecipes = recipes.length;
-      const rate = totalRate / numRecipes;
-      user.rate = rate;
-      await user.save();
-    }
-    res.json(users);
+
+    // Retrieve all recipes at once to reduce the number of database queries
+    const allRecipes = await Recipe.find();
+
+    const userRates = users.map(user => {
+      const userRecipes = allRecipes.filter(recipe => recipe.userId.id.toString() === user._id.toString());
+      const totalRate = userRecipes.reduce((acc, recipe) => acc + recipe.rate, 0);
+      user.rate = userRecipes.length > 0 ? totalRate / userRecipes.length : 0;
+      return user.save();
+    });
+
+    // Wait for all user rate updates to complete
+    await Promise.all(userRates);
+
+    // Retrieve the updated users from the database
+    const updatedUsers = await User.find();
+    res.json(updatedUsers);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });
@@ -74,27 +71,24 @@ router.post("/rate/user", async (req, res) => {
 
 router.post("/rate/restaurant", async (req, res) => {
   try {
-    const users = await User.find();
-    for (let i = 0; i < users.length; i++) {
-      const userId = users[i]._id;
-      const recipes = await Recipe.find({ 'userId.id': userId });
-      const user = await Restaurant.findById(userId);
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-      if (!recipes || recipes.length === 0) {
-        return res.json({ message: 'No recipes found for the user', rate: 0 });
-      }
-      let totalRate = 0;
-      recipes.forEach(recipe => {
-        totalRate += recipe.rate;
-      });
-      const numRecipes = recipes.length;
-      const rate = totalRate / numRecipes;
-      user.rate = rate;
-      await user.save();
-    }
-    res.json(users);
+    const restaurants = await Restaurant.find();
+
+    // Retrieve all recipes at once to reduce the number of database queries
+    const allRecipes = await Recipe.find();
+
+    const restaurantRates = restaurants.map(restaurant => {
+      const restaurantRecipes = allRecipes.filter(recipe => recipe.userId.id.toString() === restaurant._id.toString());
+      const totalRate = restaurantRecipes.reduce((acc, recipe) => acc + recipe.rate, 0);
+      restaurant.rate = restaurantRecipes.length > 0 ? totalRate / restaurantRecipes.length : 0;
+      return restaurant.save();
+    });
+
+    // Wait for all restaurant rate updates to complete
+    await Promise.all(restaurantRates);
+
+    // Retrieve the updated restaurants from the database
+    const updatedRestaurants = await Restaurant.find();
+    res.json(updatedRestaurants);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });
@@ -103,25 +97,31 @@ router.post("/rate/restaurant", async (req, res) => {
 
 router.post("/rate/:idRecipe", async (req, res) => {
   try {
-    const {idRecipe} = req.params.idRecipe
+    const { idRecipe } = req.params;
     const recipe = await Recipe.findById(idRecipe);
+    if (!recipe) {
+      return res.status(404).json({ message: 'Recipe not found' });
+    }
+
     const userFavoritesCount = await User.countDocuments({ favorites: idRecipe });
     const restaurantFavoritesCount = await Restaurant.countDocuments({ favorites: idRecipe });
     const totalFavorites = restaurantFavoritesCount + userFavoritesCount;
     const totalUser = await User.countDocuments();
     const totalRes = await Restaurant.countDocuments();
-    const total = totalUser+totalRes
-    recipe.rate = parseFloat(((totalFavorites / total)*100).toFixed(2))
+    const total = totalUser + totalRes;
+
+    recipe.rate = parseFloat(((totalFavorites / total) * 100).toFixed(2));
     await recipe.save();
-    const response = '';
-    response = await axios.get('http://localhost:3000/rate/user')
-    response = await axios.get('http://localhost:3000/rate/restaurant')
+
+    // Update rates for all users and restaurants
+    await axios.post('http://localhost:3000/rate/user');
+    await axios.post('http://localhost:3000/rate/restaurant');
+
     const updatedRecipe = await Recipe.findById(idRecipe);
     res.status(200).json(updatedRecipe);
   } catch (err) {
-    res.status(500).json({
-      message: err.message,
-    });
+    console.error(err);
+    res.status(500).json({ message: err.message });
   }
 });
   
