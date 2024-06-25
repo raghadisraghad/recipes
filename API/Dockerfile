@@ -1,20 +1,22 @@
-# Utiliser l'image Node.js officielle comme image de base
-FROM node:latest
+# Use an official Node.js runtime as the base image
+FROM node:14
 
-# Définir le répertoire de travail dans le conteneur
+# Set the working directory inside the container
 WORKDIR /usr/src/app
 
-# Copier package.json et package-lock.json dans le répertoire de travail
+# Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
-# Installer les dépendances du projet
+# Install the dependencies
 RUN npm install
+RUN npm install express-session
+RUN npm install axios
 
-# Copier le reste des fichiers de l'application dans le répertoire de travail
+# Copy the rest of the application code to the working directory
 COPY . .
 
-# Exposer le port sur lequel l'application va tourner
+# Expose the port your app runs on
 EXPOSE 3000
 
-# Démarrer l'application
-CMD ["node", "backend/server.js"]
+# Define the command to run your application
+CMD ["npm", "start"]

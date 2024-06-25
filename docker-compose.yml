@@ -1,17 +1,6 @@
 version: '3.8'
 
 services:
-  backend:
-    image: raghadisraghad/express-recipe
-    container_name: backend
-    restart: always
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=production
-      - MONGODB_URI=mongodb://mongo:27017/Recipes
-    depends_on:
-      - mongo
 
   mongo:
     image: mongo
@@ -22,15 +11,43 @@ services:
     volumes:
       - mongo-data:/data/db
 
+  API:
+    build:
+      context: ./API
+      dockerfile: Dockerfile
+    container_name: API
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://mongo:27017/Recipes
+    depends_on:
+      - mongo
+    command: node server.js
+    networks:
+      - resApp
+
   frontend:
-    image: raghadisraghad/angular-recipe
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
     container_name: frontend
     restart: always
     ports:
       - "80:80"
     depends_on:
       - backend
+    networks:
+      - resApp
 
 volumes:
   mongo-data:
     driver: local
+
+networks:
+  resApp:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.10.42.0/24
