@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as the base image
-FROM node:14
+FROM node:20.14.0
 
 # Set the working directory inside the container
 WORKDIR /usr/src/app
@@ -8,9 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install the dependencies
-RUN npm install
-RUN npm install express-session
-RUN npm install axios
+RUN npm install && npm install express-session && npm install axios
 
 # Copy the rest of the application code to the working directory
 COPY . .

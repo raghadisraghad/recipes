@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-
   mongo:
     image: mongo
     container_name: mongo
@@ -11,11 +10,11 @@ services:
     volumes:
       - mongo-data:/data/db
 
-  API:
+  api:
     build:
-      context: ./API
+      context: ./api
       dockerfile: Dockerfile
-    container_name: API
+    container_name: api
     restart: always
     ports:
       - "3000:3000"
@@ -37,7 +36,7 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - backend
+      - api
     networks:
       - resApp
 
@@ -50,4 +49,5 @@ networks:
     driver: bridge
     ipam:
       config:
+        - subnet: 10.10.42.0/24
         - subnet: 10.10.42.0/24
