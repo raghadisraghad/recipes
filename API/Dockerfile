@@ -8,9 +8,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Install the dependencies
-RUN npm install
-RUN npm install express-session
-RUN npm install axios
+RUN npm install && npm install express-session && npm install axios
 
 # Copy the rest of the application code to the working directory
 COPY . .

@@ -1,5 +1,3 @@
-# frontend/Dockerfile
-
 # Stage 1: Build the Angular application
 FROM node:14 AS build
 
@@ -22,7 +20,7 @@ RUN npm run build --prod
 FROM nginx:alpine
 
 # Copy the build output from the previous stage to the Nginx html folder
-COPY --from=build /usr/src/app/dist/your-app-name /usr/share/nginx/html
+COPY --from=build /usr/src/app/dist/Frontend /usr/share/nginx/html
 
 # Expose port 80 to the outside world
 EXPOSE 80
