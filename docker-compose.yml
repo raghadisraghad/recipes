@@ -36,7 +36,11 @@ services:
     ports:
       - "80:80"
     depends_on:
+<<<<<<< HEAD
       - api
+=======
+      - API
+>>>>>>> 227d277c7213c9e701551578a9c439f9b0e578d5
     networks:
       - resApp
 
@@ -50,4 +54,7 @@ networks:
     ipam:
       config:
         - subnet: 10.10.42.0/24
+<<<<<<< HEAD
         - subnet: 10.10.42.0/24
+=======
+>>>>>>> 227d277c7213c9e701551578a9c439f9b0e578d5

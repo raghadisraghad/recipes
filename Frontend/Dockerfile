@@ -25,7 +25,11 @@ RUN npm run build --configuration=production
 FROM nginx:alpine 
 
 # Copy the build output from the previous stage to the Nginx html folder
+<<<<<<< HEAD
 COPY --from=build /usr/src/app/dist /usr/share/nginx/html
+=======
+COPY --from=build /usr/src/app/dist/Frontend /usr/share/nginx/html
+>>>>>>> 227d277c7213c9e701551578a9c439f9b0e578d5
 
 # Expose port 80 to the outside world
 EXPOSE 80
