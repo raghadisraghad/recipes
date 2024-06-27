@@ -2,13 +2,15 @@ version: '3.8'
 
 services:
   mongo:
-    image: mongo
+    image: mongo:latest
     container_name: mongo
     restart: always
     ports:
-      - "27017:27017"
+      - "28017:27017"
     volumes:
-      - mongo-data:/data/db
+      - mongo_data:/data/db
+    networks:
+      - resApp
 
   api:
     build:
@@ -18,9 +20,6 @@ services:
     restart: always
     ports:
       - "3000:3000"
-    environment:
-      - NODE_ENV=production
-      - MONGODB_URI=mongodb://mongo:27017/Recipes
     depends_on:
       - mongo
     command: node server.js
@@ -29,24 +28,25 @@ services:
 
   frontend:
     build:
-      context: ./Frontend
+      context: ./frontend
       dockerfile: Dockerfile
     container_name: frontend
     restart: always
     ports:
       - "80:80"
+    expose:
+      - 80
     depends_on:
       - api
+    volumes:
+      - frontend:/usr/share/nginx/html  
     networks:
       - resApp
 
 volumes:
-  mongo-data:
-    driver: local
+  mongo_data: {}
+  frontend:
 
 networks:
   resApp:
     driver: bridge
-    ipam:
-      config:
-        - subnet: 10.10.42.0/24

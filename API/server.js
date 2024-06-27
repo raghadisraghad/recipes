@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const cors = require('cors');
+const url = "mongodb://mongo:27017/Recipes";
 
 const authRoutes = require('./routes/auth');
 const UserRoutes = require('./routes/user');
@@ -21,10 +22,7 @@ app.use(session({
   saveUninitialized: false,
 }));
 
-mongoose.connect('mongodb://localhost:27017/Recipes', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => {
+mongoose.connect(url).then(() => {
   console.log("Connected to MongoDB");
 }).catch((err) => {
   console.error("Error connecting to MongoDB:", err);
@@ -35,6 +33,9 @@ app.use(UserRoutes);
 app.use(recipeRoutes);
 app.use(restaurantsRoutes);
 app.use(requestsRoutes);
+app.get('/', (req, res) => {
+  res.send('Hello To The Recipe App!');
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
